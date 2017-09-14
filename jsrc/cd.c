@@ -279,11 +279,14 @@ static F1(jtintgamp0){A f,g,h,x,y;B nf,ng;C id;V*v;
   case CPOLY:  if(nf)R ipoly(x); break;
   case CBANG:  if(nf&&AT(x))R ipoly(df1(iota(increm(x)),tdot(w))); break;
   case CEXP:
-   if(ng&&!AR(x)){
-    if(equ(x,num[-1]))R ds(CLOG);
-    RZ(y=pcvt(INT,x));
-    R INT&AT(y)?ipoly(take(sc(-1-i0(y)),one)):atop(amp(ds(CDIV),increm(y)),amp(ds(CEXP),increm(y)));
-   }
+  if(ng&&!AR(x)){
+   if(equ(x,num[-1]))R ds(CLOG);
+   RZ(y=pcvt(INT,x));
+   R ((INT==AT(y))&&(i0(y)>0))?ipoly(take(sc(-1-i0(y)),one)):atop(amp(ds(CDIV),increm(y)),amp(ds(CEXP),increm(y)));
+  }
+  else if(nf){
+   R atop(amp(ds(CDIV),logar1(x)), amp(x,ds(CEXP)));
+  }
   case CCIRCLE:
    if(nf){
     RZ(x=vi(x));
