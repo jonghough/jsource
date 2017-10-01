@@ -282,9 +282,14 @@ static F1(jtintgamp0){A f,g,h,x,y;B nf,ng;C id;V*v;
   if(ng&&!AR(x)){
    if(equ(x,num[-1]))R ds(CLOG);
    RZ(y=pcvt(INT,x));
-   R ((INT==AT(y))&&(i0(y)>0))?ipoly(take(sc(-1-i0(y)),one)):atop(amp(ds(CDIV),increm(y)),amp(ds(CEXP),increm(y)));
+   // if y is an INT and value > 0, integrate as polynomial (ipoly), else do y^(a+1) / (a+1).
+   R ((INT&AT(y))&&i0(y)>0)?ipoly(take(sc(-1-i0(y)),one)):atop(amp(ds(CDIV),increm(y)),amp(ds(CEXP),increm(y)));
   }
   else if(nf){
+   // e.g. a^y for some y. integrate as exp(log(a) * y). If a is negative
+   // the result will be complex.
+   // For the case where a=0, this will cause an error.
+   if(equ(x,num[0]))R 0;
    R atop(amp(ds(CDIV),logar1(x)), amp(x,ds(CEXP)));
   }
   case CCIRCLE:
